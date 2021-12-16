@@ -1,6 +1,25 @@
 #include "gauss.h"
 #include <math.h>
 
+
+int maxi (Matrix *m1, int i)
+{
+		double max = m1->data[i][i];
+		int j, i_max;
+		for( j = i+1; j < m1->r; j++)			// szukanie max wartosci w kolumnie
+		{	if(abs(m1->data[j][i]) > abs(max))
+			{	
+				max = m1->data[j][i];
+				i_max=j;
+			}
+		}
+		if(max==0.0)	i_max=-1;
+		
+		return i_max;
+}
+
+
+
 /**
  * Zwraca 0 - elimnacja zakonczona sukcesem
  * Zwraca 1 - macierz osobliwa - dzielenie przez 0
@@ -20,17 +39,9 @@ int eliminate(Matrix *mat, Matrix *b)
 	int m;
 	for(i = 0; i < m1->r-1; i++)  				// przejscie po kolumnach
 	{
-		double max = m1->data[i][i];
-		int i_max;
-		for( j = i+1; j < m1->r; j++)			// szukanie max wartosci w kolumnie
-		{	if(abs(m1->data[j][i]) > abs(max))
-			{	
-				max = m1->data[j][i];
-				i_max=j;
-			}
-		}
+		int i_max = maxi(m1, i);
 			
-		if( max == 0)	return 1;
+		if( i_max == -1)	return 1;
 
 		for(m = 0; m < m1->c; m++)			// zamiana wierszy
 		{
